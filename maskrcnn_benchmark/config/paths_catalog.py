@@ -7,6 +7,18 @@ import os
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "food_train": {
+            "img_dir": "food/image/",
+            "ann_file": "food/train_val/dimsum_train_detection.csv"
+        },
+        "food_val": {
+            "img_dir": "food/image/",
+            "ann_file": "food/train_val/dimsum_val_detection.csv"
+        },
+        "food_test": {
+            "img_dir": "food/image/",
+            "ann_file": "food/train_val/dimsum_test_detection.csv"
+        },
         "coco_2017_train": {
             "img_dir": "coco/train2017",
             "ann_file": "coco/annotations/instances_train2017.json"
@@ -128,6 +140,17 @@ class DatasetCatalog(object):
             )
             return dict(
                 factory="PascalVOCDataset",
+                args=args,
+            )
+        elif "food" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs["img_dir"]),
+                ann_file=os.path.join(data_dir, attrs["ann_file"]),
+            )
+            return dict(
+                factory="FOODDataset",
                 args=args,
             )
         raise RuntimeError("Dataset not available: {}".format(name))

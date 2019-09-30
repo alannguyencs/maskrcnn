@@ -5,6 +5,7 @@ import torch
 from collections import OrderedDict
 from tqdm import tqdm
 
+from maskrcnn_benchmark.data import datasets
 from maskrcnn_benchmark.modeling.roi_heads.mask_head.inference import Masker
 from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.structures.boxlist_ops import boxlist_iou
@@ -85,7 +86,10 @@ def prepare_for_coco_detection(predictions, dataset):
         scores = prediction.get_field("scores").tolist()
         labels = prediction.get_field("labels").tolist()
 
-        mapped_labels = [dataset.contiguous_category_id_to_json_id[i] for i in labels]
+        if isinstance(dataset, datasets.COCODataset):
+            mapped_labels = [dataset.contiguous_category_id_to_json_id[i] for i in labels]
+        else:
+            mapped_labels = [45 for i in labels]
 
         coco_results.extend(
             [
@@ -98,6 +102,9 @@ def prepare_for_coco_detection(predictions, dataset):
                 for k, box in enumerate(boxes)
             ]
         )
+    
+    for coco_result in coco_results:
+        print (coco_result)
     return coco_results
 
 
