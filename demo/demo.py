@@ -23,6 +23,6 @@ if image.shape[2] == 4:
 	image = image[:, :, :3]
 # image = torch.from_numpy(image).float()
 
-predictions = coco_demo.run_on_opencv_image(image)
+predictions, _ = coco_demo.run_on_opencv_image(image)
 predictions = Image.fromarray(predictions)
 predictions.save("demo_result.png")

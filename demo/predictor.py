@@ -90,7 +90,7 @@ class COCODemo(object):
         "cup",
         "fork",
         "knife",
-        "spoon",
+        "food",
         "bowl",
         "banana",
         "apple",
@@ -208,6 +208,9 @@ class COCODemo(object):
         """
         predictions = self.compute_prediction(image)
         top_predictions = self.select_top_predictions(predictions)
+        # print ("top_predictions: ", top_predictions)
+        # print (top_predictions.bbox)
+        print (top_predictions.extra_fields)
 
         result = image.copy()
         if self.show_mask_heatmaps:
@@ -219,7 +222,7 @@ class COCODemo(object):
             result = self.overlay_keypoints(result, top_predictions)
         result = self.overlay_class_names(result, top_predictions)
 
-        return result
+        return result, top_predictions
 
     def compute_prediction(self, original_image):
         """
